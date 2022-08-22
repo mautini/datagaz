@@ -17,7 +17,7 @@ import ConsumptionChart from "../components/ConsumptionChart";
 import StorageChart from "../components/StorageChart";
 import MapChart from "../components/MapChart";
 
-const DATA_URL = 'http://192.168.1.30:8000/data'
+const DATA_URL = 'https://api.datagaz.fr/data'
 
 export default function Home() {
     const [data, setData] = useState(null);

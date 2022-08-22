@@ -42,7 +42,7 @@ export default function Contact() {
                         message: data.message
                     })
                 };
-                fetch('http://localhost:8000/contact', requestOptions)
+                fetch('https://api.datagaz.fr/contact', requestOptions)
                     .then(response => console.log(response))
             }}
         >
