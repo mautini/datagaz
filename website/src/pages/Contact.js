@@ -1,5 +1,9 @@
-import {Button, Grid} from "@mui/material";
+import * as React from "react";
+import {Alert, AlertTitle, Button, Collapse, Grid, IconButton} from "@mui/material";
+import CloseIcon from '@mui/icons-material/Close';
+import SendIcon from '@mui/icons-material/Send';
 import {FormContainer, SelectElement, TextFieldElement} from "react-hook-form-mui";
+import {useForm} from "react-hook-form";
 
 const reasons = [
     {
@@ -25,10 +29,16 @@ const reasons = [
 ]
 
 export default function Contact() {
+    const [openSuccess, setOpenSuccess] = React.useState(false);
+    const [openError, setOpenError] = React.useState(false);
+    const form = useForm();
+
     return (
         <FormContainer
-            defaultValues={{firstName: ''}}
+            formContext={form}
             onSuccess={data => {
+                setOpenSuccess(false)
+                setOpenError(false)
                 const requestOptions = {
                     method: 'POST',
                     headers: {'Content-Type': 'application/json'},
@@ -43,7 +53,15 @@ export default function Contact() {
                     })
                 };
                 fetch('https://api.datagaz.fr/contact', requestOptions)
-                    .then(response => console.log(response))
+                    .then(response => {
+                        if(response.status === 200) {
+                            setOpenSuccess(true)
+                            form.reset()
+                        } else {
+                            setOpenError(true)
+                        }
+                    })
+                    .catch(response => setOpenError(true))
             }}
         >
             <Grid container spacing={2} sx={{mb: 8}}>
@@ -85,7 +103,50 @@ export default function Contact() {
                                       validation={{required: 'Ce champ est obligatoire'}}/>
                 </Grid>
                 <Grid item xs={12}>
-                    <Button type={'submit'} variant={'contained'} color={'primary'} fullWidth>Envoyer</Button>
+                    <Collapse in={openSuccess}>
+                        <Alert
+                            action={
+                                <IconButton
+                                    aria-label="close"
+                                    color="inherit"
+                                    size="small"
+                                    onClick={() => {
+                                        setOpenSuccess(false);
+                                    }}>
+                                    <CloseIcon fontSize="inherit" />
+                                </IconButton>
+                            }
+                            sx={{ mb: 2 }}
+                        >
+                            <AlertTitle>Message envoyé !</AlertTitle>
+                        </Alert>
+                    </Collapse>
+                </Grid>
+                <Grid item xs={12}>
+                    <Collapse in={openError}>
+                        <Alert
+                            action={
+                                <IconButton
+                                    aria-label="close"
+                                    color="inherit"
+                                    size="small"
+                                    onClick={() => {
+                                        setOpenError(false);
+                                    }}>
+                                    <CloseIcon fontSize="inherit" />
+                                </IconButton>
+                            }
+                            sx={{ mb: 2 }}
+                            severity="error"
+                        >
+                            <AlertTitle>Erreur lors de l'envoi du message, réessayez !</AlertTitle>
+                        </Alert>
+                    </Collapse>
+                </Grid>
+                <Grid item xs={12}>
+                    <Button type={'submit'} variant={'contained'} color={'primary'} fullWidth endIcon={<SendIcon />}>
+                        Envoyer
+                    </Button>
                 </Grid>
             </Grid>
         </FormContainer>

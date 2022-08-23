@@ -7,7 +7,7 @@ export default function Legal() {
                 Mentions légales
             </Typography>
             <Typography variant="body1" component="div" gutterBottom sx={{mb: 4}}>
-                Les présentes conditions précisent les modalités d'utilisation du site TO_CHANGE. De par l'utilisation
+                Les présentes conditions précisent les modalités d'utilisation du site datagaz.fr. De par l'utilisation
                 du présent site, l'utilisateur reconnaît avoir pris connaissance de ces conditions et les accepte de
                 manière pleine et entière. Ces conditions sont susceptibles d'être modifiées à tout moment.
             </Typography>
