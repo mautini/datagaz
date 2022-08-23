@@ -11,6 +11,8 @@
 .idea/**/usage.statistics.xml
 .idea/**/dictionaries
 .idea/**/shelf
+.idea/**/codeStyleConfig.xml
+.idea/**/Project.xml
 
 # AWS User-specific
 .idea/**/aws.xml
@@ -479,3 +481,4 @@ $RECYCLE.BIN/
 
 private/
 ansible/
+backend/*.json
