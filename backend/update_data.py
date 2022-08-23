@@ -92,12 +92,6 @@ def _validate_agsi_data(agsi_data: model.AGSIData) -> bool:
 
 def _validate_entsog_data(min_nb_values_by_date: int, max_nb_values_by_date: int,
                           entsog_data: model.ENTSOGData) -> bool:
-    #    update_date=max_date,
-    #    last_consumption=consumption_data[max_date],
-    #    last_consumption_date=max_date,
-    #    yoy_growth=sum(current_year_consumption.values()) / sum(last_year_consumption_at_date.values()) - 1,
-    #    current_year_consumption_time_series=current_year_consumption,
-    #    last_year_consumption_time_series=last_year_consumption_at_date
 
     update_date = entsog_data.update_date
     today = datetime.date.today()
