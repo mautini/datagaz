@@ -24,8 +24,17 @@ export default function Footer() {
                     href='/mentions-legales'
                     underline='hover'
                     align="center"
-                    variant={'caption'}>
+                    variant={'caption'}
+                    sx={{mr: 4}}
+                >
                     Mentions légales
+                </Link>
+                <Link
+                    href='https://github.com/mautini/datagaz'
+                    underline='hover'
+                    align='center'
+                    variant={'caption'}>
+                    Code source
                 </Link>
             </Stack>
         </Stack>
