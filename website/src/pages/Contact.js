@@ -5,6 +5,10 @@ import SendIcon from '@mui/icons-material/Send';
 import {FormContainer, SelectElement, TextFieldElement} from "react-hook-form-mui";
 import {useForm} from "react-hook-form";
 
+const formUrl = 'https://api.datagaz.fr/contact'
+
+const domParser = new DOMParser();
+
 const reasons = [
     {
         id: '1',
@@ -28,6 +32,18 @@ const reasons = [
     }
 ]
 
+function getFormId(html) {
+    const doc = domParser.parseFromString(html, "text/html");
+    const formBuildIds = doc.getElementsByName('form_build_id');
+    if (formBuildIds.length === 1) {
+        const formBuildId = formBuildIds[0]
+        if (formBuildId.hasAttribute('value')) {
+            console.log(formBuildId)
+            return formBuildId.getAttribute('value')
+        }
+    }
+}
+
 export default function Contact() {
     const [openSuccess, setOpenSuccess] = React.useState(false);
     const [openError, setOpenError] = React.useState(false);
@@ -41,27 +57,50 @@ export default function Contact() {
                 setOpenError(false)
                 const requestOptions = {
                     method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({
-                        first_name: data.firstName,
-                        last_name: data.lastName,
-                        phone: data.phone,
-                        mail: data.mail,
-                        reason: reasons[data.reason].label,
-                        title: data.title,
-                        message: data.message
+                    headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                    body: new URLSearchParams({
+                        'submitted[new_1661366981220]': data.firstName,
+                        'submitted[new_1661366998814]': data.lastName,
+                        'submitted[new_1661367027190]': data.phone,
+                        'submitted[new_1661367044734]': data.mail,
+                        'submitted[new_1661367036482]': reasons[data.reason - 1].label,
+                        'submitted[new_1661367069570]': data.title,
+                        'submitted[new_1661367082271]': data.message,
                     })
                 };
-                fetch('https://api.datagaz.fr/contact', requestOptions)
+                fetch(formUrl, requestOptions)
                     .then(response => {
                         if(response.status === 200) {
-                            setOpenSuccess(true)
-                            form.reset()
+                            return response.text();
                         } else {
                             setOpenError(true)
                         }
                     })
-                    .catch(response => setOpenError(true))
+                    .then(html => {
+                        const formBuildId = getFormId(html)
+                        if (!formBuildId) {
+                            throw new Error('Unable to get the form id')
+                        }
+                        const requestOptions = {
+                            method: 'POST',
+                            headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                            body: new URLSearchParams({
+                                'form_build_id': formBuildId,
+                                'op': 'Soumettre'
+                            })
+                        };
+                        fetch(formUrl, requestOptions)
+                            .then(response => {
+                                if(response.status === 200) {
+                                    setOpenSuccess(true)
+                                    form.reset()
+                                } else {
+                                    setOpenError(true)
+                                }
+                            })
+                            .catch(_ => setOpenError(true))
+                    })
+                    .catch(_ => setOpenError(true))
             }}
         >
             <Grid container spacing={2} sx={{mb: 8}}>

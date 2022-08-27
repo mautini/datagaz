@@ -17,7 +17,7 @@ import ConsumptionChart from "../components/ConsumptionChart";
 import StorageChart from "../components/StorageChart";
 import MapChart from "../components/MapChart";
 
-const DATA_URL = 'https://api.datagaz.fr/data'
+const DATA_URL = 'https://raw.githubusercontent.com/mautini/datagaz/main/data/data.json'
 
 export default function Home() {
     const [data, setData] = useState(null);
