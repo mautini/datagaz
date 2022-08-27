@@ -92,6 +92,13 @@ export default function Contact() {
                         fetch(formUrl, requestOptions)
                             .then(response => {
                                 if(response.status === 200) {
+                                    return response.text()
+                                }
+                                setOpenError(true)
+                            })
+                            .then(body => {
+                                // Check in the body if we have the confirmation message
+                                if (body.includes('webform-confirmation')) {
                                     setOpenSuccess(true)
                                     form.reset()
                                 } else {
