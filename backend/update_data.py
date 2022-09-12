@@ -142,6 +142,9 @@ def _update_agsi_data():
         )
 
         body = response.json()
+        if 'error' in body:
+            raise ValueError(body['error'])
+
         last_page = body['last_page']
         all_data.extend(body['data'])
 
@@ -224,5 +227,8 @@ def _update_entsog_data():
 
 
 if __name__ == '__main__':
-    _update_agsi_data()
+    try:
+        _update_agsi_data()
+    except ValueError as e:
+        logging.error(f'Unable to get AGSI data: {e}')
     _update_entsog_data()
