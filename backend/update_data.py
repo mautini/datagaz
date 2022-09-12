@@ -1,6 +1,6 @@
 import datetime
 import logging
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Tuple
 
 import dateutil.relativedelta
 import requests
@@ -9,7 +9,7 @@ import config
 import model
 
 
-def _get_agsi_all_countries_data(agsi_config: Dict[str, Any]):
+def _get_agsi_all_countries_and_eu_data(agsi_config: Dict[str, Any]) -> Tuple[Dict[str, str], str]:
     response = requests.get(
         url=agsi_config['api_endpoint'],
         headers=agsi_config['headers']
@@ -24,7 +24,7 @@ def _get_agsi_all_countries_data(agsi_config: Dict[str, Any]):
         # EU and Non-EU
         in data[0]['children'] + data[1]['children']
         if child['full'] != '-'
-    }
+    }, data[0]['full']
 
 
 def _validate_agsi_data(agsi_data: model.AGSIData) -> bool:
@@ -86,6 +86,10 @@ def _validate_agsi_data(agsi_data: model.AGSIData) -> bool:
                 full
             )
             return False
+
+    if agsi_data.eu_full_rate < -10 or agsi_data.eu_full_rate > 110:
+        logging.error('AGSI EU full rate seems to be out of range', agsi_data.full_rate)
+        return False
 
     return True
 
@@ -150,6 +154,8 @@ def _update_agsi_data():
 
     last_day = all_data[0]
 
+    all_countries_and_eu_data = _get_agsi_all_countries_and_eu_data(agsi_config=config.agsi)
+
     agsi_data = model.AGSIData(
         update_date=last_day['gasDayStart'],
         full_rate=last_day['full'],
@@ -157,7 +163,8 @@ def _update_agsi_data():
         max_storage_capacity=last_day['workingGasVolume'],
         max_storage_consumption=float(last_day['workingGasVolume']) / float(last_day['consumption']) * 100,
         france_historical_data={item['gasDayStart']: item['full'] for item in all_data[::-1]},
-        all_countries_data=_get_agsi_all_countries_data(agsi_config=config.agsi)
+        all_countries_data=all_countries_and_eu_data[0],
+        eu_full_rate=all_countries_and_eu_data[1]
     )
 
     # Perform some validation about the data before storing it!

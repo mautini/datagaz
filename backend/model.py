@@ -12,6 +12,7 @@ class AGSIData(BaseModel):
     max_storage_consumption: float
     france_historical_data: Dict[str, float]
     all_countries_data: Dict[str, float]
+    eu_full_rate: float
 
 
 class ENTSOGData(BaseModel):
