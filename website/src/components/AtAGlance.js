@@ -17,8 +17,7 @@ function AtAGlance({data}) {
                             Taux de remplissage des sites de stockage
                         </Typography>
                         <Typography variant={'caption'} color={theme.palette.text.secondary}>
-                            La capacité totale de stockage pour la France est
-                            de {Math.round(data.agsi_data.max_storage_capacity)} TWh
+                            Dans l'Union européenne, les stocks sont remplis à {data.agsi_data.eu_full_rate}%.
                         </Typography>
                     </CardContent>
                 </Card>
@@ -40,8 +39,8 @@ function AtAGlance({data}) {
                         </Typography>
                         <Typography variant={'caption'} color={theme.palette.text.secondary}>
                             La capacité totale de stockage en France
-                            représente {Math.round(data.agsi_data.max_storage_consumption)}% de la consommation
-                            annuelle.
+                            représente {Math.round(data.agsi_data.max_storage_consumption)}% de sa consommation
+                            annuelle (soit {Math.round(data.agsi_data.max_storage_capacity)} TWh).
                         </Typography>
                     </CardContent>
                 </Card>
@@ -82,7 +81,7 @@ function AtAGlance({data}) {
                         <Typography variant={'caption'} color={theme.palette.text.secondary}>
                             L'Union Européenne a fixé comme objectif une réduction de 15% sur la
                             période août 2022 - mars 2023 <Link
-                            href={'https://ec.europa.eu/commission/presscorner/detail/en/IP_22_4608'}>(source)</Link>
+                            href={'https://ec.europa.eu/commission/presscorner/detail/en/IP_22_4608'}>(source)</Link>.
                         </Typography>
                     </CardContent>
                 </Card>
