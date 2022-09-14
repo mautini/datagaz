@@ -44,7 +44,7 @@ function ConsumptionChart({data}) {
             const month = new Date(key).toLocaleString('fr', {month: 'long'});
             return ({
                 name: capitalizeFirstLetter(month),
-                2022: current_year_data[key] / 1000 / 1000, // kWh to MWh
+                2022: current_year_data[key] / 1000 / 1000, // kWh to GWh
                 2021: last_year_data[last_year_key] / 1000 / 1000,
                 raw_date: key.slice(8, 10) + '/' + key.slice(5, 7)
             })
@@ -61,7 +61,7 @@ function ConsumptionChart({data}) {
                 />
                 <YAxis
                     label={{
-                        value: 'MWh',
+                        value: 'GWh',
                         angle: -90,
                         position: 'insideLeft',
                         fill: theme.palette.text.primary,
