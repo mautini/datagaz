@@ -17,9 +17,9 @@ const CustomTooltip = ({active, payload, label}) => {
                 </CardHeader>
                 <CardContent sx={{px: 2, py: 0}}>
                     <Typography>
-                        {payload[0].payload.raw_date + '/' + payload[0].dataKey + ' : ' + payload[0].value.toFixed(2) + 'MWh'}
+                        {payload[0].payload.raw_date + '/' + payload[0].dataKey + ' : ' + payload[0].value.toFixed(2) + 'GWh'}
                         <br/>
-                        {payload[1].payload.raw_date + '/' + payload[1].dataKey + ' : ' + payload[1].value.toFixed(2) + 'MWh'}
+                        {payload[1].payload.raw_date + '/' + payload[1].dataKey + ' : ' + payload[1].value.toFixed(2) + 'GWh'}
                     </Typography>
                 </CardContent>
             </Card>
