@@ -2,7 +2,6 @@ agsi = {
     'api_endpoint': 'https://agsi.gie.eu/api',
     'query_params': {
         'country': 'FR',
-        'size': 300,
         'from': '2022-01-01'
     },
     'headers': {
