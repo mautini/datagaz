@@ -138,11 +138,12 @@ def _update_agsi_data():
     while current_page != last_page:
         current_page = current_page + 1
         headers = agsi_config['headers']
-        headers['page'] = str(current_page)
+        params = agsi_config['query_params']
+        params['page'] = str(current_page)
         response = requests.get(
             url=agsi_config['api_endpoint'],
-            params=agsi_config['query_params'],
-            headers=agsi_config['headers']
+            params=params,
+            headers=headers
         )
 
         body = response.json()
