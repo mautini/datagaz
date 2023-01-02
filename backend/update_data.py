@@ -56,15 +56,15 @@ def _validate_agsi_data(agsi_data: model.AGSIData) -> bool:
         logging.error('AGSI max storage consumption seems to be out of range', agsi_data.trend)
         return False
 
-    nb_days_from_2021: int = (today - datetime.date(2022, 1, 1)).days
-    if len(agsi_data.france_historical_data) > nb_days_from_2021:
+    nb_days_from_last_year: int = (today - datetime.date(update_date.year, 1, 1)).days
+    if len(agsi_data.france_historical_data) > nb_days_from_last_year:
         logging.error(
             'AGSI: It seems that there is too much data for France historic',
             len(agsi_data.france_historical_data)
         )
         return False
 
-    if len(agsi_data.france_historical_data) < nb_days_from_2021 - 15:
+    if len(agsi_data.france_historical_data) < nb_days_from_last_year - 15:
         logging.error(
             'AGSI: It seems that there is too few data for France historic',
             len(agsi_data.france_historical_data)
@@ -96,7 +96,6 @@ def _validate_agsi_data(agsi_data: model.AGSIData) -> bool:
 
 def _validate_entsog_data(min_nb_values_by_date: int, max_nb_values_by_date: int,
                           entsog_data: model.ENTSOGData) -> bool:
-
     update_date = entsog_data.update_date
     today = datetime.date.today()
     # Check that update data roughly match the current date
@@ -129,7 +128,7 @@ def _validate_entsog_data(min_nb_values_by_date: int, max_nb_values_by_date: int
 
 
 def _update_agsi_data():
-    agsi_config = config.agsi
+    agsi_config = config.get_agsi_config(datetime.date.today().year)
 
     all_data = []
 
@@ -155,7 +154,7 @@ def _update_agsi_data():
 
     last_day = all_data[0]
 
-    all_countries_and_eu_data = _get_agsi_all_countries_and_eu_data(agsi_config=config.agsi)
+    all_countries_and_eu_data = _get_agsi_all_countries_and_eu_data(agsi_config=agsi_config)
 
     agsi_data = model.AGSIData(
         update_date=last_day['gasDayStart'],
@@ -177,11 +176,8 @@ def _update_agsi_data():
 
 
 def _update_entsog_data():
-    entsog_config = config.entsog
-
-    params = entsog_config['query_params']
-    # Add today as max date for the query
-    params['to'] = datetime.date.today()
+    today = datetime.date.today()
+    entsog_config = config.get_entsog_config(today)
 
     response = requests.get(
         url=entsog_config['api_endpoint'],
@@ -209,7 +205,7 @@ def _update_entsog_data():
     last_year_consumption_at_date = {
         str(k): v
         for k, v in consumption_data.items()
-        if k <= datetime.date.today() - dateutil.relativedelta.relativedelta(years=1)
+        if k <= max_date - dateutil.relativedelta.relativedelta(years=1)
     }
 
     current_year_consumption = {
@@ -218,10 +214,14 @@ def _update_entsog_data():
         if k.year == current_year
     }
 
+    yoy_growth = sum(current_year_consumption.values()) / sum(last_year_consumption_at_date.values()) - 1 \
+        if sum(last_year_consumption_at_date.values()) - 1 > 0 \
+        else 0
+
     entsog_data = model.ENTSOGData(
         update_date=max_date,
         last_consumption=consumption_data[max_date],
-        yoy_growth=sum(current_year_consumption.values()) / sum(last_year_consumption_at_date.values()) - 1,
+        yoy_growth=yoy_growth,
         current_year_consumption_time_series=current_year_consumption,
         last_year_consumption_time_series=last_year_consumption_at_date
     )
