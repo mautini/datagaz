@@ -9,6 +9,17 @@ import config
 import model
 
 
+NB_DAYS_IN_YEAR = 365
+
+
+def _isfloat(input_variable: Any):
+    try:
+        float(input_variable)
+        return True
+    except ValueError:
+        return False
+
+
 def _get_agsi_all_countries_and_eu_data(agsi_config: Dict[str, Any]) -> Tuple[Dict[str, str], str]:
     response = requests.get(
         url=agsi_config['api_endpoint'],
@@ -56,15 +67,14 @@ def _validate_agsi_data(agsi_data: model.AGSIData) -> bool:
         logging.error('AGSI max storage consumption seems to be out of range', agsi_data.trend)
         return False
 
-    nb_days_from_last_year: int = (today - datetime.date(update_date.year, 1, 1)).days
-    if len(agsi_data.france_historical_data) > nb_days_from_last_year:
+    if len(agsi_data.france_historical_data) > NB_DAYS_IN_YEAR:
         logging.error(
             'AGSI: It seems that there is too much data for France historic',
             len(agsi_data.france_historical_data)
         )
         return False
 
-    if len(agsi_data.france_historical_data) < nb_days_from_last_year - 15:
+    if len(agsi_data.france_historical_data) < NB_DAYS_IN_YEAR - 5:
         logging.error(
             'AGSI: It seems that there is too few data for France historic',
             len(agsi_data.france_historical_data)
@@ -128,7 +138,7 @@ def _validate_entsog_data(min_nb_values_by_date: int, max_nb_values_by_date: int
 
 
 def _update_agsi_data():
-    agsi_config = config.get_agsi_config(datetime.date.today().year)
+    agsi_config = config.get_agsi_config(datetime.date.today())
 
     all_data = []
 
@@ -153,6 +163,7 @@ def _update_agsi_data():
         all_data.extend(body['data'])
 
     last_day = all_data[0]
+    country_consumption = [data['consumption'] for data in all_data if _isfloat(data['consumption'])][0]
 
     all_countries_and_eu_data = _get_agsi_all_countries_and_eu_data(agsi_config=agsi_config)
 
@@ -161,7 +172,7 @@ def _update_agsi_data():
         full_rate=last_day['full'],
         trend=last_day['trend'],
         max_storage_capacity=last_day['workingGasVolume'],
-        max_storage_consumption=float(last_day['workingGasVolume']) / float(last_day['consumption']) * 100,
+        max_storage_consumption=float(last_day['workingGasVolume']) / float(country_consumption) * 100,
         france_historical_data={item['gasDayStart']: item['full'] for item in all_data[::-1]},
         all_countries_data=all_countries_and_eu_data[0],
         eu_full_rate=all_countries_and_eu_data[1]
@@ -211,7 +222,7 @@ def _update_entsog_data():
     current_year_consumption = {
         str(k): v
         for k, v in consumption_data.items()
-        if k.year == current_year
+        if k > max_date - dateutil.relativedelta.relativedelta(years=1)
     }
 
     yoy_growth = sum(current_year_consumption.values()) / sum(last_year_consumption_at_date.values()) - 1 \

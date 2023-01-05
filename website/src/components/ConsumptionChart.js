@@ -17,9 +17,9 @@ const CustomTooltip = ({active, payload, label}) => {
                 </CardHeader>
                 <CardContent sx={{px: 2, py: 0}}>
                     <Typography>
-                        {payload[0].payload.raw_date + '/' + payload[0].dataKey + ' : ' + payload[0].value.toFixed(2) + 'GWh'}
+                        {payload[0].payload.raw_date + '/' + payload[0].payload.year + ' : ' + payload[0].value.toFixed(2) + 'GWh'}
                         <br/>
-                        {payload[1].payload.raw_date + '/' + payload[1].dataKey + ' : ' + payload[1].value.toFixed(2) + 'GWh'}
+                        {payload[1].payload.raw_date + '/' + (payload[0].payload.year - 1) + ' : ' + payload[1].value.toFixed(2) + 'GWh'}
                     </Typography>
                 </CardContent>
             </Card>
@@ -36,16 +36,9 @@ function ConsumptionChart({data}) {
     const current_year_data = data.entsog_data.current_year_consumption_time_series
     const last_year_data = data.entsog_data.last_year_consumption_time_series
 
-    if (Object.entries(current_year_data).length < 1) {
-        return (
-            <Typography>Données insufisantes</Typography>
-        )
-    }
-
-    const current_year = Object.keys(current_year_data)[0].slice(0, 4)
-
     const chart_data = Object.keys(current_year_data).map(
         key => {
+            const current_year = key.slice(0, 4)
             const last_year = current_year - 1
             const last_year_key = key.replace(current_year, last_year)
             const month = new Date(key).toLocaleString('fr', {month: 'long'});
@@ -53,7 +46,8 @@ function ConsumptionChart({data}) {
                 name: capitalizeFirstLetter(month),
                 current_year: current_year_data[key] / 1000 / 1000, // kWh to GWh
                 last_year: last_year_data[last_year_key] / 1000 / 1000,
-                raw_date: key.slice(8, 10) + '/' + key.slice(5, 7)
+                raw_date: key.slice(8, 10) + '/' + key.slice(5, 7),
+                year: key.slice(0, 4)
             })
         }
     )
@@ -75,9 +69,8 @@ function ConsumptionChart({data}) {
                     }}
                     stroke={theme.palette.text.primary}/>
                 <Tooltip content={<CustomTooltip/>}/>
-                <Legend/>
-                <Line type="monotone" dataKey={current_year} stroke={theme.palette.primary.main} dot={null}/>
-                <Line type="monotone" dataKey={current_year - 1} stroke={theme.palette.secondary.main} dot={null}/>
+                <Line type="monotone" dataKey='current_year' stroke={theme.palette.primary.main} dot={null}/>
+                <Line type="monotone" dataKey='last_year' stroke={theme.palette.secondary.main} dot={null}/>
             </LineChart>
         </ResponsiveContainer>
     )

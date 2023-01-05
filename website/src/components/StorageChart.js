@@ -70,7 +70,6 @@ function StorageChart({data}) {
                     }}
                     stroke={theme.palette.text.primary}/>
                 <Tooltip content={<CustomTooltip/>}/>
-                <Legend/>
                 <Area
                     type="monotone"
                     name="Taux de remplissage"

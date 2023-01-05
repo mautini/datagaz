@@ -1,12 +1,12 @@
 import datetime
 
 
-def get_agsi_config(year: int):
+def get_agsi_config(today: datetime.date):
     return {
         'api_endpoint': 'https://agsi.gie.eu/api',
         'query_params': {
             'country': 'FR',
-            'from': f'{year - 1}-01-01'
+            'from': f'{today.year - 1}-{today.month}-{today.day}'
         },
         'headers': {
             'x-key': 'AGSI_KEY'
@@ -23,7 +23,7 @@ def get_entsog_config(today: datetime.date):
                                'fr----------fr-tso-0003exitdistribution,'
                                'fr----------fr-tso-0002exitfinal consumers,'
                                'fr----------fr-tso-0002exitdistribution'],
-            'from': f'{today.year - 1}-01-01',
+            'from': f'{today.year - 2}-{today.month}-{today.day}',  # We gather two years of data, to compare
             'indicator': 'Physical Flow',
             'periodType': 'day',
             'timezone': 'CET',

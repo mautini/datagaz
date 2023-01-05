@@ -57,7 +57,7 @@ function AtAGlance({data}) {
                             Consommation journalière
                         </Typography>
                         <Typography variant={'caption'} color={theme.palette.text.secondary}>
-                            En 2021, la consommation totale annuelle était de 479 TWh,
+                            L'année dernière, la consommation totale annuelle était de 479 TWh,
                             soit en moyenne 1314 GWh par jour.
                         </Typography>
                     </CardContent>
@@ -76,7 +76,7 @@ function AtAGlance({data}) {
                     </CardHeader>
                     <CardContent sx={{pt: 1}}>
                         <Typography sx={{mb: 2}}>
-                            Evolution de la consommation sur 1 an
+                            Evolution de la consommation sur 1 an (glissant)
                         </Typography>
                         <Typography variant={'caption'} color={theme.palette.text.secondary}>
                             L'Union Européenne a fixé comme objectif une réduction de 15% sur la

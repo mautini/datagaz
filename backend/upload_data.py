@@ -16,7 +16,7 @@ FILENAME = 'data.json'
 if __name__ == '__main__':
     logging.info('Getting data')
     today = datetime.date.today()
-    with open(config.get_agsi_config(year=today.year)['data_filename'], 'r') as f:
+    with open(config.get_agsi_config(today=today)['data_filename'], 'r') as f:
         agsi_data: model.AGSIData = json.load(f)
 
     with open(config.get_entsog_config(today=today)['data_filename'], 'r') as f:
