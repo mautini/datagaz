@@ -35,7 +35,7 @@ export default function Legal() {
             </Typography>
             <Typography variant="body1" component="div" gutterBottom sx={{my: 4}}>
                 Pour toute question sur ces présentes conditions ou sur les données personnelles, vous pouvez utiliser
-                la page de <Link href={"/contact"}>contact</Link>.
+                la page de <Link href={"https://twitter.com/DataGaz"}>contact</Link>.
             </Typography>
         </Box>
     )

@@ -11,7 +11,6 @@ import Footer from "./components/Footer";
 import {BrowserRouter, Route, Routes} from "react-router-dom";
 import Legal from "./pages/Legal";
 import Header from "./components/Header";
-import Contact from "./pages/Contact";
 import NotFound from "./pages/NotFound";
 
 
@@ -41,7 +40,6 @@ function App() {
                         <Routes>
                             <Route path="/" element={<Home/>}/>
                             <Route path={"/mentions-legales"} element={<Legal/>}/>
-                            <Route path={"/contact"} element={<Contact/>}/>
                             <Route path="*" element={<NotFound/>}/>
                         </Routes>
                         <Footer></Footer>

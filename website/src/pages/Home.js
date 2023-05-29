@@ -112,9 +112,8 @@ export default function Home() {
                         Network of Transmission System Operators for Gas)
                     </li>
                     <br/>
-                    Pour toute question ou précision sur les données utilisées, vous pouvez utiliser le lien vers
-                    le formulaire de contact ci-dessous. Merci aussi de me faire remonter toutes les erreurs que
-                    vous pourriez trouver dans les données : bien que je m'efforce à vérifier la qualité de
+                    Pour toute question ou précision sur les données utilisées, vous pouvez utiliser le lien de contact ci-dessous. 
+                    Merci aussi de me faire remonter toutes les erreurs que vous pourriez trouver dans les données : bien que je m'efforce à vérifier la qualité de
                     celles-ci, le système de l'ENTSOG est extrêmement complexe et il est possible que je passe à
                     côté de certaines subtilités.
                 </ul>

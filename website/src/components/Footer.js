@@ -14,7 +14,7 @@ export default function Footer() {
             </Typography>
             <Stack direction={'row'}>
                 <Link
-                    href='/contact'
+                    href='https://twitter.com/DataGaz'
                     underline='hover'
                     variant={'caption'}
                     sx={{mr: 4}}>

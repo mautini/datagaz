@@ -58,7 +58,7 @@ Data comes from two providers:
 
 Feel free to open issues or pull request if you find bugs or want to add some improvements to the code base.
 
-If you want to contact me for other purpose (non-tech), you can use the contact form on the website.
+If you want to contact me for other purpose (non-tech), you can use the contact link on the website.
 
 ## Roadmap
 
